@@ -539,11 +539,13 @@
 }
 
 .images-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;  /* Items ko horizontally center karega */
   gap: 20px;
   padding: 10px;
 }
+
 
 .image-item {
   background-color: #1e1e1e;
@@ -552,6 +554,9 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   position: relative;
   transition: transform 0.3s, box-shadow 0.3s;
+  width: 50%; /* ya koi fixed value, jaise: 200px */
+  height: auto;
+
 }
 
 .image-item:hover {
@@ -1180,62 +1185,53 @@
   
   // ================= Image Upload & Compression Feature =================
   // Function to compress image using a canvas
-  function compressImage(imageDataUrl, maxWidth, maxHeight, quality, callback) {
-    const img = new Image();
-    img.onload = function() {
-      let width = img.width;
-      let height = img.height;
-      
-      // Scale dimensions while maintaining aspect ratio
-      if (width > height) {
-        if (width > maxWidth) {
-          height = Math.round(height * (maxWidth / width));
-          width = maxWidth;
-        }
-      } else {
-        if (height > maxHeight) {
-          width = Math.round(width * (maxHeight / height));
-          height = maxHeight;
-        }
-      }
-      
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
-      // Export compressed image as JPEG with given quality (e.g., 0.7 for 70%)
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-      callback(compressedDataUrl);
-    };
-    img.src = imageDataUrl;
-  }
-  
+  function compressImage(imageDataUrl, quality, callback) {
+  const img = new Image();
+  img.onload = function() {
+    // Calculate new dimensions: one fourth of original dimensions
+    const newWidth = Math.floor(img.width / 4);
+    const newHeight = Math.floor(img.height / 4);
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+    const ctx = canvas.getContext('2d');
+    // Draw the image scaled to the new dimensions
+    ctx.drawImage(img, 0, 0, newWidth, newHeight);
+    
+    // Export the compressed image as JPEG with given quality (e.g., 0.7 for 70%)
+    const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+    callback(compressedDataUrl);
+  };
+  img.src = imageDataUrl;
+}
+
   // Modified uploadImage function with compression
   function uploadImage() {
-    const imageInput = document.getElementById('imageInput');
-    if (imageInput.files.length === 0) {
-      alert("Please select an image file.");
-      return;
-    }
-    const file = imageInput.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const originalImageData = e.target.result;
-      // Compress image: max width 800, max height 800, quality 0.7
-      compressImage(originalImageData, 800, 800, 0.7, function(compressedImageData) {
-        const image = {
-          id: Date.now(),
-          data: compressedImageData,
-          timestamp: new Date().toLocaleDateString('en-GB')
-        };
-        saveImage(image);
-        renderImages();
-        imageInput.value = ""; // Reset the file input
-      });
-    };
-    reader.readAsDataURL(file);
+  const imageInput = document.getElementById('imageInput');
+  if (imageInput.files.length === 0) {
+    alert("Please select an image file.");
+    return;
   }
+  const file = imageInput.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const originalImageData = e.target.result;
+    // Compress image: reduce to 1/4 of its original dimensions, quality 0.7
+    compressImage(originalImageData, 0.7, function(compressedImageData) {
+      const image = {
+        id: Date.now(),
+        data: compressedImageData,
+        timestamp: new Date().toLocaleDateString('en-GB')
+      };
+      saveImage(image);
+      renderImages();
+      imageInput.value = ""; // Reset the file input
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
   
   // Save the image object to localStorage
   function saveImage(image) {
