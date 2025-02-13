@@ -7,7 +7,8 @@
   <!-- Google Font: Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* ===============================
+   
+   /* ===============================
    Global Styles & CSS Variables
    =============================== */
 body {
@@ -35,6 +36,24 @@ body {
 }
 
 /* ===============================
+   Animations
+   =============================== */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1.5s ease forwards;
+}
+
+/* ===============================
    Header & Note Type Buttons
    =============================== */
 .header {
@@ -44,6 +63,8 @@ body {
   background: linear-gradient(135deg, #2196F3, #21CBF3);
   border-radius: 10px;
   box-shadow: 7px 6px 12px rgba(0, 0, 0, 0.3);
+  margin-top: 30px;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .header h1 {
   font-size: 2.5em;
@@ -93,6 +114,7 @@ body {
 }
 .note-section.active {
   display: block;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 
 /* ===============================
@@ -142,6 +164,7 @@ body {
   cursor: pointer;
   position: relative;
   transition: transform 0.2s;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .notebook:hover {
   transform: scale(1.02);
@@ -180,6 +203,7 @@ body {
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.5);
   margin-top: 20px;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 #notebookNotesView button.back-btn {
   margin-bottom: 10px;
@@ -286,6 +310,7 @@ body {
   position: relative;
   transition: background-color 0.3s, transform 0.2s;
   height: auto;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .note:hover {
   transform: scale(1.02);
@@ -365,6 +390,7 @@ body {
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.4);
   margin-bottom: 30px;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 
 .checklist-group-creator {
@@ -414,6 +440,7 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
   cursor: pointer;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 
 .checklist-group:hover {
@@ -459,6 +486,7 @@ body {
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.4);
   margin-top: 30px;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 
 #checklistGroupTitleHeader {
@@ -523,7 +551,6 @@ body {
   border-radius: 12px;
   margin-bottom: 0px;
   transition: background 0.3s;
-  
 }
 
 .checklist-item:hover {
@@ -563,7 +590,6 @@ body {
   color: var(--text-color);
   font-size: 1em;
   width: 100%;
-  
 }
 
 /* ===========================
@@ -616,6 +642,7 @@ body {
   cursor: pointer;
   position: relative;
   transition: transform 0.2s;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .checklist-group:hover {
   transform: scale(1.02);
@@ -766,6 +793,7 @@ body {
   transition: transform 0.3s, box-shadow 0.3s;
   width: 50%; /* Adjust as needed */
   height: auto;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .image-item:hover {
   transform: scale(1.02);
@@ -825,7 +853,7 @@ body {
    =============================== */
 #exportBtn,
 #importBtn {
-  padding: 8px 16px;
+  padding: 16px 16px;
   font-size: 0.9em;
   border: none;
   border-radius: 4px;
@@ -862,6 +890,7 @@ body {
   z-index: 1000;
   width: 90%;
   max-width: 400px;
+  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .password-prompt input {
   width: 100%;
