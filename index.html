@@ -64,7 +64,6 @@ body {
   border-radius: 10px;
   box-shadow: 7px 6px 12px rgba(0, 0, 0, 0.3);
   margin-top: 30px;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .header h1 {
   font-size: 2.5em;
@@ -114,7 +113,6 @@ body {
 }
 .note-section.active {
   display: block;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 
 /* ===============================
@@ -164,7 +162,6 @@ body {
   cursor: pointer;
   position: relative;
   transition: transform 0.2s;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .notebook:hover {
   transform: scale(1.02);
@@ -203,7 +200,6 @@ body {
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.5);
   margin-top: 20px;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 #notebookNotesView button.back-btn {
   margin-bottom: 10px;
@@ -310,7 +306,6 @@ body {
   position: relative;
   transition: background-color 0.3s, transform 0.2s;
   height: auto;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .note:hover {
   transform: scale(1.02);
@@ -390,7 +385,6 @@ body {
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.4);
   margin-bottom: 30px;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 
 .checklist-group-creator {
@@ -440,7 +434,6 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
   cursor: pointer;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 
 .checklist-group:hover {
@@ -486,7 +479,6 @@ body {
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.4);
   margin-top: 30px;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 
 #checklistGroupTitleHeader {
@@ -642,7 +634,6 @@ body {
   cursor: pointer;
   position: relative;
   transition: transform 0.2s;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .checklist-group:hover {
   transform: scale(1.02);
@@ -793,7 +784,6 @@ body {
   transition: transform 0.3s, box-shadow 0.3s;
   width: 50%; /* Adjust as needed */
   height: auto;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .image-item:hover {
   transform: scale(1.02);
@@ -890,7 +880,6 @@ body {
   z-index: 1000;
   width: 90%;
   max-width: 400px;
-  animation: fadeIn 1.5s ease forwards; /* Added Animation */
 }
 .password-prompt input {
   width: 100%;
@@ -1023,6 +1012,9 @@ let currentChecklistGroupId = null;
 
 /* ============ Section Switching ============ */
 function showSection(section) {
+  // Save current section to localStorage
+  localStorage.setItem('lastOpenedSection', section);
+  
   document.querySelectorAll('.note-section').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.note-type-btn').forEach(el => el.classList.remove('active'));
   document.getElementById(section + 'Section').classList.add('active');
@@ -1205,6 +1197,9 @@ function createNotebook() {
 }
 
 function openNotebook(notebookId) {
+  // Save current notebook ID to localStorage
+  localStorage.setItem('lastOpenedNotebook', notebookId);
+  
   currentNotebookId = notebookId;
   document.getElementById('notebooksView').style.display = 'none';
   document.getElementById('notebookNotesView').style.display = 'block';
@@ -1217,6 +1212,9 @@ function openNotebook(notebookId) {
 }
 
 function backToNotebooks() {
+  // Clear last opened notebook from localStorage
+  localStorage.removeItem('lastOpenedNotebook');
+  
   currentNotebookId = null;
   editingNoteId = null;
   document.getElementById('notebooksView').style.display = 'block';
@@ -1585,10 +1583,25 @@ function importData(file) {
 }
 
 /* ============ Initial Loads ============ */
-loadNotebooks();
-renderNotes();
-loadChecklistGroups();
-renderImages();
+function initializeApp() {
+  loadNotebooks();
+  renderNotes();
+  loadChecklistGroups();
+  renderImages();
+
+  // Restore last opened section
+  const lastSection = localStorage.getItem('lastOpenedSection') || 'regular';
+  showSection(lastSection);
+
+  // Restore last opened notebook if any
+  const lastNotebook = localStorage.getItem('lastOpenedNotebook');
+  if (lastSection === 'regular' && lastNotebook) {
+    openNotebook(parseInt(lastNotebook));
+  }
+}
+
+// Replace the existing initial loads with initializeApp()
+window.onload = initializeApp;
 
   </script>
 </body>
